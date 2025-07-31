@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             PangkatGolonganSeeder::class,
         ]);
 
-         User::factory(10)->create();
+        User::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Test User',
