@@ -1,0 +1,114 @@
+{
+    "uid": "obs-logs",
+    "title": "Log Streams",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "5s",
+    "time": {
+        "from": "now-1h",
+        "to": "now"
+    },
+    "templating": {
+        "list": [
+            {
+                "type": "query",
+                "datasource": "Loki",
+                "name": "job",
+                "label": "Job",
+                "query": "label_values(job)",
+                "refresh": 2,
+                "multi": false,
+                "includeAll": false
+            },
+            {
+                "type": "query",
+                "datasource": "Loki",
+                "name": "program",
+                "label": "Program (supervisor)",
+                "query": "label_values({job=\"supervisor\"}, program)",
+                "refresh": 2,
+                "multi": false,
+                "includeAll": true,
+                "current": {
+                    "text": "All",
+                    "value": ".*"
+                }
+            }
+        ]
+    },
+    "panels": [
+        {
+            "id": 1,
+            "type": "logs",
+            "title": "Live Logs",
+            "datasource": "Loki",
+            "gridPos": {
+                "h": 12,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "targets": [
+                {
+                    "refId": "A",
+                    "expr": "{job=\"$job\",program=~\"$program\"}"
+                }
+            ],
+            "options": {
+                "dedupStrategy": "none",
+                "showLabels": true,
+                "wrapLogMessage": true
+            }
+        },
+        {
+            "id": 2,
+            "type": "stat",
+            "title": "Errors / min",
+            "datasource": "Loki",
+            "gridPos": {
+                "h": 4,
+                "w": 12,
+                "x": 0,
+                "y": 12
+            },
+            "targets": [
+                {
+                    "refId": "B",
+                    "expr": "sum(rate({job=\"$job\",program=~\"$program\",level=\"ERROR\"}[1m]))"
+                }
+            ],
+            "options": {
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ]
+                }
+            }
+        },
+        {
+            "id": 3,
+            "type": "stat",
+            "title": "Warnings / min",
+            "datasource": "Loki",
+            "gridPos": {
+                "h": 4,
+                "w": 12,
+                "x": 12,
+                "y": 12
+            },
+            "targets": [
+                {
+                    "refId": "C",
+                    "expr": "sum(rate({job=\"$job\",program=~\"$program\",level=\"WARNING\"}[1m]))"
+                }
+            ],
+            "options": {
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ]
+                }
+            }
+        }
+    ]
+}

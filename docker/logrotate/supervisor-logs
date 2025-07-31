@@ -1,0 +1,9 @@
+/var/log/supervisor/*.log {
+    daily
+    rotate 14
+    dateext
+    dateformat -%Y-%m-%d
+    missingok
+    notifempty
+    copytruncate
+}

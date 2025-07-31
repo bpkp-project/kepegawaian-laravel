@@ -1,0 +1,12 @@
+# grafana/provisioning/dashboards/orva.yml
+apiVersion: 1
+
+providers:
+  - name: "ORVA Dashboards"   # bebas ganti nama
+    folder: "Logs"            # nama folder yang akan tampak di sidebar Grafana
+    type: file
+    disableDeletion: false    # boleh dihapus via UI
+    allowUiUpdates: false     # cegah edit dari UI
+    editable: false
+    options:
+      path: /var/lib/grafana/dashboards   # <— persis dengan volume yang sudah di-mount
