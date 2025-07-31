@@ -1,29 +1,42 @@
 services:
-    mariadb:
-        image: mariadb:11.8
-        container_name: mariadb11-lts
+    redis:
+        image: redis
+        container_name: redis
         restart: always
-        environment:
-            MARIADB_ROOT_PASSWORD: admin
-            MARIADB_DATABASE: ate
-            MARIADB_USER: admin
-            MARIADB_PASSWORD: admin
         ports:
-            - "127.0.0.1:3306:3306"
+            - "127.0.0.1:6379:6379"
         volumes:
-            - mariadb_data:/var/lib/mysql
-    phpmyadmin:
-        image: phpmyadmin
-        container_name: phpmyadmin
+            - redis_data:/data
+    postgres:
+        image: postgres:17
+        container_name: postgres_db
         restart: always
         environment:
-            PMA_HOST: mariadb
-            PMA_USER: root
-            PMA_PASSWORD: admin
-            UPLOAD_LIMIT: 4000M
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+            POSTGRES_DB: kepegawaian
         ports:
-            - "127.0.0.1:8082:80"
+            - "127.0.0.1:5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: pgadmin
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@email.com
+            PGADMIN_DEFAULT_PASSWORD: admin
+        ports:
+            - "127.0.0.1:5050:80"
         depends_on:
-            - mariadb
+            - postgres
+    adminer:
+        image: adminer
+        restart: always
+        environment:
+            ADMINER_DEFAULT_SERVER: postgres
+        ports:
+            - "127.0.0.1:8083:8080"
 volumes:
-    mariadb_data:
+    postgres_data:
+    redis_data:
