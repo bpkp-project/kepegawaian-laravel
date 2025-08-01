@@ -75,22 +75,8 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        $diklat = Diklat::where(DB::raw('year(dari_tanggal_pelaksanaan)'), date('Y'))->where('pegawai_id', Auth::user()->pegawai->id)->sum('jumlah_jam_pelatihan');
-        $ppm = Ppm::where(DB::raw('year(tanggal_pelaksanaan)'), date('Y'))->where('pegawai_id', Auth::user()->pegawai->id)->sum('jumlah_jam_pelatihan');
-        $seminar = Seminar::where(DB::raw('year(tanggal_pelaksanaan)'), date('Y'))->where('pegawai_id', Auth::user()->pegawai->id)->sum('jumlah_jam');
-        $webinar = Webinar::where(DB::raw('year(tanggal_pelaksanaan)'), date('Y'))->where('pegawai_id', Auth::user()->pegawai->id)->sum('jumlah_jam');
-        $lc = Lc::where(DB::raw('year(tanggal_pelaksanaan)'), date('Y'))->where('pegawai_id', Auth::user()->pegawai->id)->sum('jumlah_jam');
-
-        $rekapitulasiPegawaiData = $this->rekapitulasiPegawaiData();
-
         return view('pages.dashboard', compact([
-            'diklat',
-            'ppm',
-            'seminar',
-            'webinar',
-            'lc',
 
-            'rekapitulasiPegawaiData',
         ]));
     }
 
